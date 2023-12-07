@@ -32,19 +32,19 @@ const IssueForm = ({ issue }: { issue?: Issue }) => {
     resolver: zodResolver(issueSchema),
   });
   const [error, setError] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitting, setSubmitting] = useState(false);
 
   const onSubmit = handleSubmit(async (data) => {
     try {
-      setIsSubmitting(true);
-      await axios.post("/api/issues", data);
+      setSubmitting(true);
+      if (issue) await axios.patch("/api/issues/" + issue.id, data);
+      else await axios.post("/api/issues", data);
       router.push("/issues");
     } catch (error) {
-      setIsSubmitting(false);
+      setSubmitting(false);
       setError("An unexpected error occurred.");
     }
   });
-
   return (
     <div className="max-w-xl ">
       {error && (
@@ -73,7 +73,8 @@ const IssueForm = ({ issue }: { issue?: Issue }) => {
         <ErrorMessage>{errors.description?.message}</ErrorMessage>
 
         <Button disabled={isSubmitting}>
-          Submit New Issue {isSubmitting && <Spinner />}
+          {issue ? "Update Issue" : "Submit New Issue"}{" "}
+          {isSubmitting && <Spinner />}{" "}
         </Button>
       </form>
     </div>
