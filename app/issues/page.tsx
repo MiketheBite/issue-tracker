@@ -7,7 +7,7 @@ const IssuesPage = async () => {
   const issues = await prisma.issue.findMany();
 
   return (
-    <div>
+    <div className="max-w-xl ">
       <IssueActions />
       <Table.Root variant="surface">
         <Table.Header>
